@@ -1,0 +1,50 @@
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    binary: iframely-server
+    ldflags:
+      - -s -w
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - amd64
+      - arm64
+checksum:
+  name_template: 'checksums.txt'
+dockers:
+  - dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/amd64"
+      - "--pull"
+    image_templates:
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-amd64"
+    goos: linux
+    goarch: amd64
+    ids:
+      - iframely-server
+  - dockerfile: Dockerfile
+    use: buildx
+    build_flag_templates:
+      - "--platform=linux/arm64"
+      - "--pull"
+    image_templates:
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-arm64"
+    goos: linux
+    goarch: arm64
+    ids:
+      - iframely-server
+docker_manifests:
+  - name_template: ghcr.io/emgag/iframely-server:{{ .Tag }}
+    image_templates:
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-amd64"
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-arm64"
+  - name_template: ghcr.io/emgag/iframely-server:latest
+    image_templates:
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-amd64"
+      - "ghcr.io/emgag/iframely-server:{{ .Tag }}-arm64"
+
