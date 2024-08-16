@@ -5,7 +5,7 @@ type Response struct {
 	URL      string `json:"url"`
 	HTML     string `json:"html"`
 	Image    string `json:"image"`
-	Error    string `json:"error"`
+	Error    string `json:"error,omitempty"`
 }
 
 type IframelyResponse struct {
